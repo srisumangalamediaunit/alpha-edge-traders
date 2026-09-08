@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HD Video Streaming Portal</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- FontAwesome icons සඳහා -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header class="navbar">
+        <div class="logo">
+            <i class="fas fa-play-circle"></i>
+            <span>HD Media Hub</span>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="container">
+        
+        <!-- Main Video Player -->
+        <section class="main-player-section">
+            <div class="video-container">
+                <video id="mainVideo" controls poster="">
+                    <source id="videoSource" src="videos/video1.mp4" type="video/mp4">
+                    Your browser does not support HTML5 video.
+                </video>
+            </div>
+            <h2 id="videoTitle" class="video-title">Video 01: Getting Started</h2>
+            <p id="videoDesc" class="video-desc">This is the description for Video 01. Select any slot from the list to play.</p>
+        </section>
+
+        <!-- Video Slots / Playlist Section -->
+        <section class="playlist-section">
+            <h3><i class="fas fa-list-ul"></i> Select Video Slot</h3>
+            
+            <div class="video-grid">
+                
+                <!-- Video Slot 1 -->
+                <div class="video-card active" onclick="playVideo('videos/video1.mp4', 'Video 01: Getting Started', 'Description for video 01', this)">
+                    <div class="thumbnail-slot">
+                        <i class="fas fa-play"></i>
+                        <span>SLOT 01</span>
+                    </div>
+                    <div class="card-info">
+                        <h4>Video 01: Getting Started</h4>
+                        <p><i class="far fa-file-video"></i> MP4 Video</p>
+                    </div>
+                </div>
+
+                <!-- Video Slot 2 -->
+                <div class="video-card" onclick="playVideo('videos/video2.mp4', 'Video 02: Advanced Features', 'Description for video 02', this)">
+                    <div class="thumbnail-slot">
+                        <i class="fas fa-play"></i>
+                        <span>SLOT 02</span>
+                    </div>
+                    <div class="card-info">
+                        <h4>Video 02: Advanced Features</h4>
+                        <p><i class="far fa-file-video"></i> MP4 Video</p>
+                    </div>
+                </div>
+
+                <!-- Video Slot 3 -->
+                <div class="video-card" onclick="playVideo('videos/video3.mp4', 'Video 03: Final Tutorial', 'Description for video 03', this)">
+                    <div class="thumbnail-slot">
+                        <i class="fas fa-play"></i>
+                        <span>SLOT 03</span>
+                    </div>
+                    <div class="card-info">
+                        <h4>Video 03: Final Tutorial</h4>
+                        <p><i class="far fa-file-video"></i> MP4 Video</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
