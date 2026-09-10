@@ -1,85 +1,309 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="si">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HD Video Streaming Portal</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- FontAwesome icons සඳහා -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>Advanced YouTube Video Player</title>
+    <!-- Google Fonts & Font Awesome Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #0f0f12;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navbar Style */
+        header {
+            background: rgba(26, 26, 36, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #ff0055;
+        }
+
+        .search-bar {
+            display: flex;
+            background: #252533;
+            border-radius: 25px;
+            padding: 5px 15px;
+            width: 40%;
+            border: 1px solid transparent;
+            transition: 0.3s;
+        }
+
+        .search-bar:focus-within {
+            border-color: #ff0055;
+            box-shadow: 0 0 10px rgba(255, 0, 85, 0.3);
+        }
+
+        .search-bar input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #fff;
+            width: 100%;
+            padding: 8px;
+        }
+
+        .search-bar button {
+            background: transparent;
+            border: none;
+            color: #aaa;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: 0.3s;
+        }
+
+        .search-bar button:hover {
+            color: #ff0055;
+        }
+
+        /* Main Container */
+        .container {
+            display: grid;
+            grid-template-columns: 2.5fr 1fr;
+            gap: 25px;
+            padding: 30px;
+            max-width: 1600px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Main Player Section */
+        .main-player-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+            background: #000;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .video-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        /* Playlist / Suggested Videos Section */
+        .playlist-section {
+            background: #1a1a24;
+            border-radius: 16px;
+            padding: 20px;
+            height: fit-content;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .playlist-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: #ff0055;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .video-card {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 15px;
+            padding: 8px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .video-card:hover {
+            background: rgba(255, 0, 85, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .thumbnail-box {
+            position: relative;
+            width: 120px;
+            height: 70px;
+            border-radius: 8px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .thumbnail-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .video-info h4 {
+            font-size: 0.9rem;
+            font-weight: 500;
+            line-height: 1.3;
+            color: #ddd;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Responsive Layout */
+        @media (max-width: 900px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            .search-bar {
+                width: 60%;
+            }
+        }
+    </style>
 </head>
 <body>
 
-    <!-- Header Section -->
-    <header class="navbar">
+    <!-- Header / Navigation Bar -->
+    <header>
         <div class="logo">
-            <i class="fas fa-play-circle"></i>
-            <span>HD Media Hub</span>
+            <i class="fa-brands fa-youtube"></i> StreamPulse
+        </div>
+        <div class="search-bar">
+            <input type="text" id="youtubeUrlInput" placeholder="Paste YouTube Video URL or ID here...">
+            <button onclick="loadCustomVideo()"><i class="fa-solid fa-play"></i></button>
         </div>
     </header>
 
-    <!-- Main Content Container -->
-    <main class="container">
-        
-        <!-- Main Video Player -->
-        <section class="main-player-section">
+    <!-- Main Content Area -->
+    <div class="container">
+        <!-- Video Player Section -->
+        <div class="main-player-section">
             <div class="video-container">
-                <video id="mainVideo" controls poster="">
-                    <source id="videoSource" src="videos/video1.mp4" type="video/mp4">
-                    Your browser does not support HTML5 video.
-                </video>
+                <iframe id="mainPlayer" 
+                    src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
             </div>
-            <h2 id="videoTitle" class="video-title">Video 01: Getting Started</h2>
-            <p id="videoDesc" class="video-desc">This is the description for Video 01. Select any slot from the list to play.</p>
-        </section>
+            <h2 class="video-title" id="videoTitle">Select or Paste a YouTube Video to Play</h2>
+        </div>
 
-        <!-- Video Slots / Playlist Section -->
-        <section class="playlist-section">
-            <h3><i class="fas fa-list-ul"></i> Select Video Slot</h3>
+        <!-- Playlist Section -->
+        <div class="playlist-section">
+            <div class="playlist-title">
+                <i class="fa-solid fa-list"></i> Featured Playlist
+            </div>
             
-            <div class="video-grid">
-                
-                <!-- Video Slot 1 -->
-                <div class="video-card active" onclick="playVideo('videos/video1.mp4', 'Video 01: Getting Started', 'Description for video 01', this)">
-                    <div class="thumbnail-slot">
-                        <i class="fas fa-play"></i>
-                        <span>SLOT 01</span>
-                    </div>
-                    <div class="card-info">
-                        <h4>Video 01: Getting Started</h4>
-                        <p><i class="far fa-file-video"></i> MP4 Video</p>
-                    </div>
-                </div>
-
-                <!-- Video Slot 2 -->
-                <div class="video-card" onclick="playVideo('videos/video2.mp4', 'Video 02: Advanced Features', 'Description for video 02', this)">
-                    <div class="thumbnail-slot">
-                        <i class="fas fa-play"></i>
-                        <span>SLOT 02</span>
-                    </div>
-                    <div class="card-info">
-                        <h4>Video 02: Advanced Features</h4>
-                        <p><i class="far fa-file-video"></i> MP4 Video</p>
-                    </div>
-                </div>
-
-                <!-- Video Slot 3 -->
-                <div class="video-card" onclick="playVideo('videos/video3.mp4', 'Video 03: Final Tutorial', 'Description for video 03', this)">
-                    <div class="thumbnail-slot">
-                        <i class="fas fa-play"></i>
-                        <span>SLOT 03</span>
-                    </div>
-                    <div class="card-info">
-                        <h4>Video 03: Final Tutorial</h4>
-                        <p><i class="far fa-file-video"></i> MP4 Video</p>
-                    </div>
-                </div>
-
+            <div id="playlistContainer">
+                <!-- Preset Videos will be loaded here using JS -->
             </div>
-        </section>
+        </div>
+    </div>
 
-    </main>
+    <script>
+        // Default Sample Videos List
+        const videos = [
+            { id: 'L_LUpnjgPso', title: 'Official Trailer | Stunning Visuals' },
+            { id: 'dQw4w9WgXcQ', title: 'Rick Astley - Never Gonna Give You Up' },
+            { id: 'fJ9rUzIMcZQ', title: 'Queen - Bohemian Rhapsody (Official Video)' },
+            { id: 'kJQP7kiw5Fk', title: 'Luis Fonsi - Despacito ft. Daddy Yankee' }
+        ];
 
-    <script src="script.js"></script>
+        const mainPlayer = document.getElementById('mainPlayer');
+        const videoTitle = document.getElementById('videoTitle');
+        const playlistContainer = document.getElementById('playlistContainer');
+
+        // Function to Load Playlist
+        function loadPlaylist() {
+            playlistContainer.innerHTML = '';
+            videos.forEach((video) => {
+                const card = document.createElement('div');
+                card.className = 'video-card';
+                card.onclick = () => playVideo(video.id, video.title);
+
+                card.innerHTML = `
+                    <div class="thumbnail-box">
+                        <img src="https://img.youtube.com/vi/${video.id}/hqdefault.jpg" alt="${video.title}">
+                    </div>
+                    <div class="video-info">
+                        <h4>${video.title}</h4>
+                    </div>
+                `;
+                playlistContainer.appendChild(card);
+            });
+        }
+
+        // Function to Play Selected Video
+        function playVideo(id, title = 'Playing Selected Video') {
+            mainPlayer.src = `https://www.youtube.com/embed/${id}?autoplay=1`;
+            videoTitle.innerText = title;
+        }
+
+        // Function to Extract YouTube Video ID from Link
+        function extractVideoID(url) {
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[2].length === 11) ? match[2] : null;
+        }
+
+        // Function to Load Video From Search Input
+        function loadCustomVideo() {
+            const input = document.getElementById('youtubeUrlInput').value.trim();
+            if (!input) return;
+
+            let videoId = extractVideoID(input);
+            if (!videoId && input.length === 11) {
+                videoId = input; // If user inputs video ID directly
+            }
+
+            if (videoId) {
+                playVideo(videoId, 'Custom Loaded Video');
+            } else {
+                alert('කරුණාකර නිවැරදි YouTube URL එකක් හෝ Video ID එකක් ඇතුළත් කරන්න!');
+            }
+        }
+
+        // Initialize Playlist on page load
+        loadPlaylist();
+    </script>
 </body>
 </html>
