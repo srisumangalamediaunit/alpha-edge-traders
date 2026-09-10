@@ -1,8 +1,8 @@
 :root {
     --bg-color: #0b0f19;
     --card-bg: #151c2c;
-    --accent-color: #38bdf8;
-    --accent-hover: #0284c7;
+    --accent-color: #ff0000; /* YouTube Red Accent */
+    --accent-hover: #cc0000;
     --text-primary: #f8fafc;
     --text-secondary: #94a3b8;
     --border-color: rgba(255, 255, 255, 0.08);
@@ -75,10 +75,11 @@ body {
     box-shadow: 0 8px 20px rgba(0,0,0,0.6);
 }
 
-.video-container video {
+/* YouTube Iframe Resizing */
+.video-container iframe {
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    border: none;
 }
 
 .video-title {
@@ -144,13 +145,13 @@ body {
 }
 
 .video-card:hover {
-    background: rgba(56, 189, 248, 0.08);
+    background: rgba(255, 0, 0, 0.08);
     border-color: var(--accent-color);
     transform: translateY(-2px);
 }
 
 .video-card.active {
-    background: rgba(56, 189, 248, 0.15);
+    background: rgba(255, 0, 0, 0.15);
     border-color: var(--accent-color);
 }
 
@@ -170,7 +171,7 @@ body {
 }
 
 .thumbnail-slot i {
-    font-size: 1.1rem;
+    font-size: 1.3rem;
     margin-bottom: 3px;
 }
 
